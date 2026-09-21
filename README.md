@@ -1,56 +1,53 @@
 # Game in Graph
 
-A compact, inspectable implementation of the Game in Graph (GIG) cooperative-driving workflow for mixed traffic.
+Game in Graph is a compact research implementation for inspecting the
+state-conflict traffic graph (SCTG), its community updates, and cooperative
+decisions in small traffic simulations.
 
-This repository accompanies the unpublished manuscript *Game in Graph: Distributed Cooperative Driving Framework for Multi-Level Equilibrium in Mixed Traffic*. It exposes the verified research-code path for vehicle propagation, spatiotemporal conflict graph construction, conflict-weighted community detection, dynamic repartitioning, and lightweight subgroup decision inspection.
+This repository accompanies the Game in Graph manuscript. It is an initial
+research preview intended for method inspection and lightweight testing.
 
 > This repository provides a compact research preview of Game in Graph for method inspection and lightweight testing. The full evaluation configurations, extended experiment scripts, and complete reproducibility package will be added after publication.
 
-This preview is not a full reproduction package. It must not be used to claim reproduction of every number, figure, statistical conclusion, large-scale experiment, or field test in the manuscript.
+## Current scope
 
-## Included scope
+The preview includes:
 
-- Schematic intersection, roundabout, and merging-area demos using the route identifiers and scenario categories present in the research code.
-- Vehicle state, path-following kinematics, CAV/HDV labels, and fixed-parameter IDM behavior for HDVs.
-- SCTG nodes and edges based on route conflict points, time to conflict point (TTCP), and the verified source weight `exp(3 - delta_ttcp)`.
-- A forced high-conflict weight for critical TTCP differences and car-following relations.
-- Leiden modularity partitioning and repartition triggers caused by vehicle-set changes or critical conflicts.
-- A small, deterministic, safety-constrained action-enumeration backend for inspecting the subgroup decision flow.
-- Safety/efficiency summary metrics, trajectory CSV output, graph snapshots, community history, and one trajectory plot.
-- Fixed-seed smoke tests that require no source edits.
+- vehicle-state updates and route-based motion;
+- SCTG construction with following and crossing interactions;
+- conflict weights, community detection, and event-driven community refreshes;
+- a compact cooperative decision loop;
+- fixed-seed intersection, roundabout, and merging demonstrations;
+- trajectory CSV, summary JSON, and a small result figure.
 
-The lightweight decision backend is intentionally bounded to a small action grid. It preserves the verified acceleration limits, conflict order, and receding-horizon data flow, but it is not the full experimental optimizer. The original experimental code uses a larger mixed-integer Gurobi formulation, while the current manuscript describes an SQP formulation. Neither is silently substituted here. See [docs/code_mapping.md](docs/code_mapping.md) and [docs/audit.md](docs/audit.md).
+It does not include the full-scale evaluation configurations, all random-seed
+results, comparison methods, training pipelines, figure-production scripts, or
+hardware/communication integrations. This preview should therefore not be used
+to claim reproduction of every numerical result, figure, or statistical
+conclusion in the manuscript.
 
-## Not included
-
-- The approximately 5,000-interaction evaluation batches, all traffic-flow/penetration combinations, or all random seeds.
-- MAPPO, MADQN, iDFST, Auction, CGIG, or other baseline implementations.
-- Training resources, field-test communication/hardware interfaces, Redis/OBU integration, or real-vehicle data.
-- Paper plotting, table-generation, rebuttal, review, and experiment-search scripts.
-- The full Gurobi optimization model, solver debug artifacts, or any personal Gurobi license.
-- A verified implementation of the manuscript's EMA edge smoothing, constrained mixed-edge Leiden formulation, SQP equations, MOBIL lane-changing policy, or online HDV preference-vector update. These items are described in the manuscript but were not all present in the audited active simulator path.
+For the release boundary, see [docs/release_scope.md](docs/release_scope.md).
 
 ## Supported scenarios
 
-The demo geometry is deliberately small and schematic; it is not the evaluation map used to generate manuscript results.
+- `intersection`
+- `roundabout`
+- `merging`
 
-| Scenario | Config | Demonstrated interaction |
-| --- | --- | --- |
-| Intersection | `configs/intersection_demo.yaml` | Crossing and car-following conflicts |
-| Roundabout | `configs/roundabout_demo.yaml` | Entry/circulating-route conflicts |
-| Merging area | `configs/merging_demo.yaml` | Mainline/ramp merging and following |
-
-## Repository layout
+## Layout
 
 ```text
-configs/                 Fixed-seed demo configurations
-docs/                    Audit, mapping, and data-format notes
-examples/                Minimal Python API example
-scripts/                 Command-line demo and plotting entry points
-src/game_in_graph/       Core implementation
-tests/                   Smoke and graph-behavior tests
-results/                 Generated outputs (ignored by Git)
+configs/                 Small fixed-seed demonstration settings
+src/game_in_graph/       Method and simulation modules
+scripts/run_demo.py      Command-line simulation entry point
+examples/                Minimal Python invocation
+tests/                   Automated smoke and graph checks
+docs/                    Data format and implementation map
+results/                 Local generated outputs (ignored by Git)
 ```
+
+The implementation map is available in [docs/code_mapping.md](docs/code_mapping.md),
+and the output schema is documented in [docs/data_format.md](docs/data_format.md).
 
 ## Requirements and installation
 
@@ -58,73 +55,91 @@ Python 3.10 or newer is recommended.
 
 ```bash
 python -m venv .venv
-# Windows: .venv\Scripts\activate
-# Linux/macOS: source .venv/bin/activate
-python -m pip install -r requirements.txt
-# Contributors running tests can additionally install:
+# Windows
+.venv\Scripts\activate
+# macOS/Linux
+# source .venv/bin/activate
+python -m pip install --upgrade pip
 python -m pip install -r requirements-dev.txt
 ```
 
-`igraph` and `leidenalg` implement the Leiden partition used by the preview. Gurobi is not required for the lightweight demos. To run the unreleased full experimental optimizer, a separate Gurobi installation and valid license are required; no license file or license path is distributed here.
+The default `enumeration` backend has no commercial-solver requirement.
+
+### Optional Gurobi backend
+
+This release also provides a compact Gurobi linear-programming backend for
+small solver-backed subgroup decisions. Install Gurobi and obtain a valid
+license from [Gurobi](https://www.gurobi.com/), then install its Python package:
+
+```bash
+python -m pip install -r requirements-gurobi.txt
+```
+
+No Gurobi license, license path, or credential is distributed with this
+repository. The optional backend is for the lightweight preview configurations;
+it is not a distribution of the full experimental optimization setup.
 
 ## Quick start
 
-From the repository root:
+Run the default lightweight demonstration:
 
 ```bash
 python scripts/run_demo.py --scenario intersection --config configs/intersection_demo.yaml
-python scripts/run_demo.py --scenario roundabout --config configs/roundabout_demo.yaml
-python scripts/run_demo.py --scenario merging --config configs/merging_demo.yaml
 ```
 
-Each command prints simulation status, vehicle count, SCTG edge count, detected communities, the minimum TTCP-difference safety measure, completion count, and average delay. Output is written beneath `results/<scenario>/`.
-
-Run the API example and tests with:
+Run the same compact case with the optional Gurobi backend:
 
 ```bash
-python examples/minimal_example.py
+python scripts/run_demo.py --scenario intersection --config configs/intersection_demo.yaml --solver gurobi
+```
+
+Choose a custom output location with `--output`:
+
+```bash
+python scripts/run_demo.py --scenario roundabout --config configs/roundabout_demo.yaml --output results/roundabout_trial
+```
+
+Each run writes:
+
+- `trajectories.csv`: vehicle state at every simulation step;
+- `edges.csv` and `communities.csv`: SCTG and community-update diagnostics;
+- `metrics.json`: status, safety, and efficiency metrics;
+- `trajectory.png`: a simple trajectory/progress visualization.
+
+The command-line summary reports simulation status, vehicle count, SCTG edge
+count, communities, a minimum safety-related measure, completion count, and
+average delay.
+
+## Configuration
+
+Scenario YAML files contain the seed, time settings, vehicles, graph thresholds,
+community parameters, and solver settings. The `solver.backend` field selects
+`enumeration` (default) or `gurobi`; `--solver` overrides it without modifying
+the YAML file. Keep the provided cases small when using the enumeration backend,
+since it searches a discrete action grid.
+
+## Testing
+
+```bash
 python -m compileall src scripts
 python -m pytest -q
 ```
 
-## Configuration
-
-Each YAML file contains:
-
-- `simulation`: fixed seed, number of steps, control period, planning horizon, and output directory.
-- `vehicle`: dimensions, acceleration limits, speed limit, and standstill gap.
-- `graph`: free-agent distance, TTCP thresholds, critical weight, and Leiden seed.
-- `solver`: the small acceleration candidate set and inspection-objective weights.
-- `vehicles`: route, type (`cav` or `hdv`), initial progress/speed, and spawn step.
-
-Vehicle state and output schemas are documented in [docs/data_format.md](docs/data_format.md).
-
-## Outputs
-
-The demo produces:
-
-- `trajectories.csv`: time-indexed vehicle states and assigned community.
-- `edges.csv`: SCTG edges, edge type, weight, TTCP difference, and critical flag.
-- `communities.csv`: community membership whenever a partition is evaluated.
-- `metrics.json`: status, counts, minimum safety measure, collision count, completion, throughput, and average delay.
-- `trajectory.png`: a compact path/trajectory visualization.
-
-Generated files under `results/` are ignored by Git.
-
-## Known limitations and manuscript/code differences
-
-The audited simulator stores vehicle state in an index-based list, uses semi-implicit longitudinal propagation, computes unsmoothed TTCP edge weights, runs Leiden on an undirected weighted graph, and overrides HDV plans with fixed IDM behavior. The manuscript has since described EMA-smoothed weights, directed co-assignment constraints, SQP, MOBIL, and adaptive HDV preference estimation. Those later descriptions cannot be verified as one integrated path in the supplied source. This preview therefore exposes the verified behavior and flags the differences instead of fabricating equivalence.
-
-The inspection solver is suitable for short, low-vehicle-count examples only. It does not establish the paper's full numerical performance or theoretical claims. Detailed findings are in [docs/audit.md](docs/audit.md).
+The smoke tests load all three configurations, complete short simulations,
+verify generated outputs, and check that key metrics are finite.
 
 ## Citation
 
-Citation metadata is provided in [CITATION.cff](CITATION.cff). The manuscript is currently listed as unpublished; no DOI, journal volume, issue, or acceptance status is asserted.
+The manuscript is not yet formally published. Please use the software-release
+metadata in [CITATION.cff](CITATION.cff) and update the citation after the
+publication record is available.
 
 ## Contact
 
-For research questions, contact Shiyu Fang at `fangshiyu@tongji.edu.cn` or open a GitHub issue.
+Please open a GitHub issue for repository questions.
 
 ## License status
 
-No open-source license has been granted for this preview. Copyright is reserved by the authors. Public visibility does not by itself grant permission to copy, modify, or redistribute the software. A formal license will be selected separately after the authors complete the publication and third-party-rights review.
+No open-source license has been selected for this pre-publication release.
+Copyright is retained by the authors; reuse or redistribution requires prior
+permission.

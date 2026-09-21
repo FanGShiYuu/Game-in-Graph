@@ -20,7 +20,7 @@ from .config import DemoConfig
 from .interaction_graph import GraphBuilder, InteractionGraph
 from .metrics import collision_pairs
 from .scenarios import load_scenario
-from .solver import InspectionSolver
+from .solver import build_solver
 from .vehicle import VehicleState, idm_acceleration
 
 
@@ -50,7 +50,7 @@ class Simulation:
             float(config.simulation["planning_horizon"]),
         )
         self.community_tracker = CommunityTracker(int(config.graph["leiden_seed"]))
-        self.solver = InspectionSolver(
+        self.solver = build_solver(
             config.solver,
             config.vehicle,
             float(config.simulation["planning_horizon"]),
@@ -253,6 +253,7 @@ class Simulation:
         return {
             "status": status,
             "scenario": self.config.scenario,
+            "solver_backend": self.solver.backend,
             "seed": int(self.config.simulation["seed"]),
             "steps": self.steps,
             "duration_s": duration,

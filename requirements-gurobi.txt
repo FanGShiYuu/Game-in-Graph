@@ -1,0 +1,2 @@
+# Optional compact Gurobi backend for the preview solver.
+gurobipy>=11.0

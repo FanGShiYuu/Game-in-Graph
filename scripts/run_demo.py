@@ -18,6 +18,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--scenario", choices=("intersection", "roundabout", "merging"), required=True)
     parser.add_argument("--config", type=Path, required=True)
     parser.add_argument("--output", type=Path, default=None)
+    parser.add_argument(
+        "--solver",
+        choices=("enumeration", "gurobi"),
+        default=None,
+        help="Override the solver backend configured in the YAML file.",
+    )
     return parser.parse_args()
 
 
@@ -28,9 +34,12 @@ def main() -> int:
         raise ValueError(
             f"Scenario argument {args.scenario!r} does not match config value {config.scenario!r}."
         )
+    if args.solver is not None:
+        config.solver["backend"] = args.solver
     result = Simulation(config, output_dir=args.output).run()
     metrics = result.metrics
     print(f"Simulation status: {result.status}")
+    print(f"Solver backend: {metrics['solver_backend']}")
     print(f"Number of vehicles: {metrics['number_of_vehicles']}")
     print(f"Number of SCTG edges: {metrics['number_of_sctg_edges']}")
     print(f"Detected communities: {metrics['detected_communities']}")

@@ -19,6 +19,7 @@ graph:
   critical_weight: 10000.0
   leiden_seed: 2
 solver:
+  backend: enumeration
   acceleration_candidates: [-4.0, -2.0, 0.0, 2.0]
   efficiency_weight: 1.0
   safety_weight: 1.0
