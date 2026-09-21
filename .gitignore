@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.coverage
+.venv/
+venv/
+.idea/
+.vscode/
+results/*
+!results/.gitkeep
+*.log
+model.ilp
+model.mps
+*.xlsx
+*.mp4
+*.gif

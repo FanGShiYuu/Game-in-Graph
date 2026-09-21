@@ -1,0 +1,32 @@
+cff-version: 1.2.0
+message: "If you use this research preview, please cite the unpublished manuscript and this software release."
+type: software
+title: "Game in Graph"
+version: 0.1.0
+date-released: 2026-09-21
+authors:
+  - family-names: Fang
+    given-names: Shiyu
+  - family-names: Zhu
+    given-names: Bing
+  - family-names: Lv
+    given-names: Chen
+  - family-names: Hang
+    given-names: Peng
+  - family-names: Sun
+    given-names: Jian
+preferred-citation:
+  type: unpublished
+  title: "Game in Graph: Distributed Cooperative Driving Framework for Multi-Level Equilibrium in Mixed Traffic"
+  authors:
+    - family-names: Fang
+      given-names: Shiyu
+    - family-names: Zhu
+      given-names: Bing
+    - family-names: Lv
+      given-names: Chen
+    - family-names: Hang
+      given-names: Peng
+    - family-names: Sun
+      given-names: Jian
+  year: 2026

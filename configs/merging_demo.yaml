@@ -1,0 +1,31 @@
+simulation:
+  scenario: merging
+  seed: 2
+  steps: 55
+  dt: 0.1
+  planning_horizon: 2.8
+  output_dir: results/merging
+vehicle:
+  length: 4.0
+  width: 2.0
+  speed_limit: 10.0
+  min_acceleration: -4.0
+  max_acceleration: 2.0
+  min_stop_gap: 1.0
+graph:
+  free_agent_distance: 80.0
+  ttcp_threshold: 3.0
+  critical_ttcp: 0.5
+  critical_weight: 10000.0
+  leiden_seed: 2
+solver:
+  acceleration_candidates: [-4.0, -2.0, 0.0, 2.0]
+  efficiency_weight: 1.0
+  safety_weight: 1.0
+  min_predicted_ttcp_gap: 0.55
+vehicles:
+  - {id: 1, kind: cav, route: s_s, progress: 72.0, speed: 8.0, spawn_step: 0}
+  - {id: 2, kind: hdv, route: m_s, progress: 68.0, speed: 7.8, spawn_step: 0}
+  - {id: 3, kind: cav, route: s_s, progress: 53.0, speed: 7.5, spawn_step: 0}
+  - {id: 4, kind: cav, route: m_s, progress: 50.0, speed: 7.2, spawn_step: 18}
+  - {id: 5, kind: cav, route: s_s, progress: 220.0, speed: 9.5, spawn_step: 0}
