@@ -7,6 +7,13 @@ decisions in small traffic simulations.
 This repository accompanies the Game in Graph manuscript. It is an initial
 research preview intended for method inspection and lightweight testing.
 
+## Project website
+
+The source for the project website is in [`website/`](website/). GitHub Pages
+deployment is defined in [`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml).
+Once GitHub Pages is enabled for this repository, the page will be available at
+`https://fangshiyuu.github.io/Game-in-Graph/`.
+
 > This repository provides a compact research preview of Game in Graph for method inspection and lightweight testing. The full evaluation configurations, extended experiment scripts, and complete reproducibility package will be added after publication.
 
 ## Current scope
@@ -18,7 +25,7 @@ The preview includes:
 - conflict weights, community detection, and event-driven community refreshes;
 - a compact cooperative decision loop;
 - fixed-seed intersection, roundabout, and merging demonstrations;
-- trajectory CSV, summary JSON, and a small result figure.
+- trajectory CSV, diagnostics, summary metrics, and a small result figure.
 
 It does not include the full-scale evaluation configurations, all random-seed
 results, comparison methods, training pipelines, figure-production scripts, or
