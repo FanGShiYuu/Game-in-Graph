@@ -11,8 +11,11 @@ research preview intended for method inspection and lightweight testing.
 
 The source for the project website is in [`website/`](website/). GitHub Pages
 deployment is defined in [`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml).
-Once GitHub Pages is enabled for this repository, the page will be available at
-`https://fangshiyuu.github.io/Game-in-Graph/`.
+During anonymous review, the project website and the read-only code mirror are
+available at:
+
+- [Anonymous project website](https://anonymous.4open.science/w/Game-in-Graph-A687/website/index.html)
+- [Anonymous code repository](https://anonymous.4open.science/r/Game-in-Graph-A687/)
 
 > This repository provides a compact research preview of Game in Graph for method inspection and lightweight testing. The full evaluation configurations, extended experiment scripts, and complete reproducibility package will be added after publication.
 
