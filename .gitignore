@@ -15,3 +15,4 @@ model.mps
 *.xlsx
 *.mp4
 *.gif
+!website/assets/large-scale-tests/*.gif
